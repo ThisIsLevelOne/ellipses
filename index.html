@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>[…]</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape/dist/cytoscape.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: serif;
+      background: #f7f7f7;
+      overflow: hidden;
+    }
+
+    #cy {
+      position: absolute;
+      inset: 0;
+    }
+
+    #panel {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 40%;
+      height: 100%;
+      background: white;
+      padding: 32px;
+      box-shadow: -2px 0 12px rgba(0,0,0,0.1);
+      display: none;
+      overflow-y: auto;
+    }
+
+    #back {
+      cursor: pointer;
+      opacity: 0.6;
+      margin-bottom: 24px;
+      display: inline-block;
+    }
+
+    #back:hover {
+      opacity: 1;
+    }
+
+    h2 {
+      font-weight: normal;
+      margin-top: 0;
+    }
+
+    p {
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="cy"></div>
+
+<div id="panel">
+  <div id="back">← back</div>
+  <h2 id="title"></h2>
+  <p id="content"></p>
+</div>
+
+<script>
+  /* ====== YOUR TEXTS GO HERE ====== */
+
+  const nodes = [
+    {
+      id: "a",
+      title: "fragment one",
+      text: "Paste your first text here.\n\nLine breaks are allowed.",
+      weight: 3
+    },
+    {
+      id: "b",
+      title: "fragment two",
+      text: "Another text fragment. Not sequential. Just adjacent.",
+      weight: 2
+    },
+    {
+      id: "c",
+      title: "fragment three",
+      text: "A third node. It can contradict the others.",
+      weight: 1
+    }
+  ];
+
+  /* ====== RELATIONSHIPS ====== */
+
+  const edges = [
+    { source: "a", target: "b" },
+    { source: "b", target: "c" }
+  ];
+
+  /* ====== GRAPH SETUP ====== */
+
+  const cy = cytoscape({
+    container: document.getElementById("cy"),
+
+    elements: [
+      ...nodes.map(n => ({ data: n })),
+      ...edges.map(e => ({ data: e }))
+    ],
+
+    layout: {
+      name: "concentric",
+      concentric: node => node.data("weight"),
+      levelWidth: () => 1
+    },
+
+    style: [
+      {
+        selector: "node",
+        style: {
+          "label": "data(title)",
+          "background-opacity": 0,
+          "text-valign": "center",
+          "text-halign": "center",
+          "font-size": "16px",
+          "color": "#111"
+        }
+      },
+      {
+        selector: "edge",
+        style: {
+          "line-opacity": 0
+        }
+      }
+    ]
+  });
+
+  /* ====== INTERACTION ====== */
+
+  cy.on("tap", "node", evt => {
+    const d = evt.target.data();
+    document.getElementById("title").innerText = d.title;
+    document.getElementById("content").innerText = d.text;
+    document.getElementById("panel").style.display = "block";
+  });
+
+  document.getElementById("back").onclick = () => {
+    document.getElementById("panel").style.display = "none";
+  };
+</script>
+
+</body>
+</html>
