@@ -131,25 +131,47 @@
     layout: {
   name: "cose",
   animate: true,
-  gravity: 0.25,
-  nodeRepulsion: 8000,
-  idealEdgeLength: 120
+  animationDuration: 1500,
+  gravity: 0.1,
+  nodeRepulsion: 12000,
+  idealEdgeLength: 160,
+  randomize: true
     },
 
     style: [
       {
         selector: "node",
-        style: {
+  style: {
     "label": "data(title)",
+
+    /* invisible body = hitbox */
+    "width": "160px",
+    "height": "auto",
+    "padding": "20px",
+
+    "background-color": "#000",
     "background-opacity": 0,
+
     "text-valign": "center",
     "text-halign": "center",
+    "text-wrap": "wrap",
+    "text-max-width": "140px",
+
     "font-size": "16px",
     "color": "#111",
-    "text-wrap": "wrap",
-    "text-max-width": "120px"
+
+    "cursor": "grab"
         }
-      },
+      }
+      {
+  selector: "node:active",
+  style: {
+    "cursor": "grabbing"
+  }
+}
+      selector: "node:hover",
+  style: {
+    "background-opacity": 0.03
       {
         selector: "edge",
         style: {
@@ -167,7 +189,27 @@
     document.getElementById("content").innerHTML = d.text;
     document.getElementById("panel").style.display = "block";
   });
-
+  
+cy.on("mouseover", "node", evt => {
+  evt.target.animate({
+    position: {
+      x: evt.target.position("x") + (Math.random() * 10 - 5),
+      y: evt.target.position("y") + (Math.random() * 10 - 5)
+    }
+  }, {
+    duration: 400
+  });
+});
+  cy.nodes().forEach(n => {
+  n.animate({
+    position: {
+      x: n.position("x") + (Math.random() * 20 - 10),
+      y: n.position("y") + (Math.random() * 20 - 10)
+    }
+  }, {
+    duration: 1200
+  });
+});
   document.getElementById("back").onclick = () => {
     document.getElementById("panel").style.display = "none";
   };
