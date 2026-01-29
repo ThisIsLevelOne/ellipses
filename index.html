@@ -131,7 +131,10 @@ const cy = cytoscape({
     idealEdgeLength: 160,
     randomize: true
   },
-
+  
+fit: true,
+  padding: 50,
+  
   style: [
     {
       selector: "node",
@@ -159,7 +162,7 @@ const cy = cytoscape({
     {
       selector: "node:hover",
       style: {
-        "background-opacity": 0.03
+        "background-opacity": 0
       }
     },
     {
@@ -185,15 +188,6 @@ cy.on("mouseover", "node", evt => {
       y: evt.target.position("y") + (Math.random() * 10 - 5)
     }
   }, { duration: 400 });
-});
-
-cy.nodes().forEach(n => {
-  n.animate({
-    position: {
-      x: n.position("x") + (Math.random() * 20 - 10),
-      y: n.position("y") + (Math.random() * 20 - 10)
-    }
-  }, { duration: 1200 });
 });
 
 document.getElementById("back").onclick = () => {
