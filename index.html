@@ -72,148 +72,131 @@
 </div>
 
 <script>
-  /* ====== YOUR TEXTS GO HERE ====== */
-
-  const nodes = [
-    {
-      id: "a",
-  title:"to do list",
-  text: `
-  ☐ throw away expiring eyedrop before it runs out  
-  ☐ Av del Portal de l'Àngel  
-  ☐ take out trash  
-  ☐ making subtitles for cultural signifiers  
-  ☐ call x and leave a new impression like a watermark  
-  ☐ find a paragraph in camera lucida to prove that I’m right  
-  ☐ review star color and sky  
-  ☐ his hand reaches into my hair and brushes on my hair extension as we kissed  
-  ☐ cancel appointment  
-  ☐ lipstick looking pink lighter made candle light dimmer than usual  
-  ☐ salmon  
-  ☐ Went to his countryside house the garden smelled like Jo Malone orange blossom cologne  
-  `,
-  weight: 3
-    },
-    {
-      id: "b",
-  title: "eye",
-  text: `
-    <img src="nodes/j924PXCV.jpeg" style="max-width:100%; margin-bottom:20px;">
-    <p>This fragment contains an image.</p>
-  `,
-  weight: 2
-    },
-    {
-      id: "c",
-      title: "fragment three",
-      text: "A third node. It can contradict the others.",
-      weight: 1
-    }
-  ];
-
-  /* ====== RELATIONSHIPS ====== */
-
-  const edges = [
-    { source: "a", target: "b" },
-    { source: "a", target: "c" }
-  ];
-
-  /* ====== GRAPH SETUP ====== */
-
-  const cy = cytoscape({
-    container: document.getElementById("cy"),
-
-    elements: [
-      ...nodes.map(n => ({ data: n })),
-      ...edges.map(e => ({ data: e }))
-    ],
-
-    layout: {
-  name: "cose",
-  animate: true,
-  animationDuration: 1500,
-  gravity: 0.1,
-  nodeRepulsion: 12000,
-  idealEdgeLength: 160,
-  randomize: true
-    },
-
-    style: [
-      {
-        selector: "node",
-  style: {
-    "label": "data(title)",
-
-    /* invisible body = hitbox */
-    "width": "160px",
-    "height": "auto",
-    "padding": "20px",
-
-    "background-color": "#000",
-    "background-opacity": 0,
-
-    "text-valign": "center",
-    "text-halign": "center",
-    "text-wrap": "wrap",
-    "text-max-width": "140px",
-
-    "font-size": "16px",
-    "color": "#111",
-
-    "cursor": "grab"
-        }
-      }
-      {
-  selector: "node:active",
-  style: {
-    "cursor": "grabbing"
+const nodes = [
+  {
+    id: "a",
+    title: "to do list",
+    text: `
+    ☐ throw away expiring eyedrop before it runs out  
+    ☐ Av del Portal de l'Àngel  
+    ☐ take out trash  
+    ☐ making subtitles for cultural signifiers  
+    ☐ call x and leave a new impression like a watermark  
+    ☐ find a paragraph in camera lucida to prove that I’m right  
+    ☐ review star color and sky  
+    ☐ his hand reaches into my hair and brushes on my hair extension as we kissed  
+    ☐ cancel appointment  
+    ☐ lipstick looking pink lighter made candle light dimmer than usual  
+    ☐ salmon  
+    ☐ Went to his countryside house the garden smelled like Jo Malone orange blossom cologne  
+    `,
+    weight: 3
+  },
+  {
+    id: "b",
+    title: "eye",
+    text: `
+      <img src="nodes/j924PXCV.jpeg" style="max-width:100%; margin-bottom:20px;">
+      <p>This fragment contains an image.</p>
+    `,
+    weight: 2
+  },
+  {
+    id: "c",
+    title: "fragment three",
+    text: "A third node. It can contradict the others.",
+    weight: 1
   }
-}
-      selector: "node:hover",
-  style: {
-    "background-opacity": 0.03
-      {
-        selector: "edge",
-        style: {
-          "line-opacity": 0
-        }
+];
+
+const edges = [
+  { source: "a", target: "b" },
+  { source: "a", target: "c" }
+];
+
+const cy = cytoscape({
+  container: document.getElementById("cy"),
+
+  elements: [
+    ...nodes.map(n => ({ data: n })),
+    ...edges.map(e => ({ data: e }))
+  ],
+
+  layout: {
+    name: "cose",
+    animate: true,
+    animationDuration: 1500,
+    gravity: 0.1,
+    nodeRepulsion: 12000,
+    idealEdgeLength: 160,
+    randomize: true
+  },
+
+  style: [
+    {
+      selector: "node",
+      style: {
+        "label": "data(title)",
+        "width": "160px",
+        "padding": "20px",
+        "background-color": "#000",
+        "background-opacity": 0,
+        "text-valign": "center",
+        "text-halign": "center",
+        "text-wrap": "wrap",
+        "text-max-width": "140px",
+        "font-size": "16px",
+        "color": "#111",
+        "cursor": "grab"
       }
-    ]
-  });
+    },
+    {
+      selector: "node:active",
+      style: {
+        "cursor": "grabbing"
+      }
+    },
+    {
+      selector: "node:hover",
+      style: {
+        "background-opacity": 0.03
+      }
+    },
+    {
+      selector: "edge",
+      style: {
+        "line-opacity": 0
+      }
+    }
+  ]
+});
 
-  /* ====== INTERACTION ====== */
+cy.on("tap", "node", evt => {
+  const d = evt.target.data();
+  document.getElementById("title").innerText = d.title;
+  document.getElementById("content").innerHTML = d.text;
+  document.getElementById("panel").style.display = "block";
+});
 
-  cy.on("tap", "node", evt => {
-    const d = evt.target.data();
-    document.getElementById("title").innerText = d.title;
-    document.getElementById("content").innerHTML = d.text;
-    document.getElementById("panel").style.display = "block";
-  });
-  
 cy.on("mouseover", "node", evt => {
   evt.target.animate({
     position: {
       x: evt.target.position("x") + (Math.random() * 10 - 5),
       y: evt.target.position("y") + (Math.random() * 10 - 5)
     }
-  }, {
-    duration: 400
-  });
+  }, { duration: 400 });
 });
-  cy.nodes().forEach(n => {
+
+cy.nodes().forEach(n => {
   n.animate({
     position: {
       x: n.position("x") + (Math.random() * 20 - 10),
       y: n.position("y") + (Math.random() * 20 - 10)
     }
-  }, {
-    duration: 1200
-  });
+  }, { duration: 1200 });
 });
-  document.getElementById("back").onclick = () => {
-    document.getElementById("panel").style.display = "none";
-  };
-</script>
 
-</body>
-</html>
+document.getElementById("back").onclick = () => {
+  document.getElementById("panel").style.display = "none";
+};
+</script>
